@@ -1,0 +1,182 @@
+philix
+
+Kyle C. Hale (c) 2015
+
+Note that these instructions can also be found in the README and in the doc directory included in the source distribution.
+
+Getting philix:
+===============
+
+You can download the philix source distribution by clicking here. We will eventually open up the git repository, but for now we are only offering the source package.
+
+Prerequisites:
+==============
+
+- a Linux host system
+- a Xeon Phi (Knights Corner) in your system
+- Intel's MPSS Software stack. This includes the compiler toolchain (e.g. k1om-mpss-linux-gcc). We've tested philix with MPSS version 3.4.2. While in theory you could use the Intel compiler (icc), we haven't tested it for kernel compilation. It would likely break things.
+- libcurses
+- libtinfo
+
+Build Instructions:
+===================
+
+You can build philix itself by running these commands:
+
+
+    [oshacker@machine]# tar xvzf philix.tgz
+    [oshacker@machine]# cd philix-x.y
+    [oshacker@machine]# ./configure
+    [oshacker@machine]# make
+    [oshacker@machine]# make install
+    
+This will build philix and put the relevant binaries on your system. If you want to put the binaries in a particular location, use the pass the --prefix flag to configure with the relevant directory. This is all you need to do to build the tool itself.
+
+Using philix:
+=============
+
+In order for philix to be useful, you need a kernel to work along with it. Your kernel also must meet some requirements, of which there are two main flavors. The first is that it must be Multiboot2 compliant. This makes things easier for both the bootloader and the kernel.
+
+To give you a taste of how one might build or port a kernel to the Xeon Phi with philix, we've provided a small dummy kernel called Winky the Cat. All it does is some minimal machine setup and spit out some output to the philix console. Taking a look at how Winky interfaces with philix would be a good point to start when integrating philix with your kernel
+
+Let's boot up Winky using philix just to see that it works:
+
+
+    [oshacker@machine]# cd philix-x.y
+    [oshacker@machine]# make winky
+    
+This will build Winky. You should now see a binary named winkythecat in the boot directory.
+We also need a bootloader that will load Winky. You should, for now, use Inky the Cat, which we've provided for you. To build Inky:
+
+
+    [oshacker@machine]# cd philix-x.y
+    [oshacker@machine]# make inky
+    
+You should now see the bootloader, named inkythecat, in the boot directory.
+You can build both of these at once by using the boot target:
+
+
+    [oshacker@machine]# cd philix-x.y
+    [oshacker@machine]# make boot
+    
+We can now boot Inky and Winky using philix:
+
+    [oshacker@machine]# pwd
+    /my/path/to/philix-x.y
+    [oshacker@machine]# philix -d -b boot/inkythecat -k boot/winkythecat
+    
+Hopefully you're seeing some output at this point. Hit Ctrl^C to exit philix.
+I owe you a bit of explanation for the arguments here. The -d flag tells philix it should dump the output of the console on exit or on an exception event. The -b flag specifies which bootloader philix should use when booting up the Xeon Phi. For now, you should just use the weever bootloader that we give you. The -k flag specifies the kernel to boot. This is where your kernel (Multiboot2) ELF image will go once you've built it.
+
+Note that you can always get a brief explanation of the various flags by running:
+
+    [oshacker@machine]# philix -h
+    philix 0.2
+    Copyright (c) the V3VEE Project (v3vee.org) and the Hobbes Project (xstack.sandia.gov/hobbes).
+    Released under the MIT License.
+    
+    Written by Kyle C. Hale (halek.co)
+    
+    
+    Usage: philix -b <bootloader> -k <kernel> [-m <micnum> ] [-o <file>] [-d] [-h]
+            -m    Which MIC device to use. Default is 0
+            -b    Path to the bootloader to boot with
+            -k    Path to the kernel to boot with
+            -o    Output to file (default is philix-datetime.log)
+            -d    Dump output to specified output file on exit/interrupt
+            -n    Run in no curses (batch) mode
+            -v    Print the version number
+            -h    Print this message
+    
+You can also use philix in batch mode (without the curses interface). This is useful if you're trying to script philix. To run philix in batch mode, use the -n flag. You'll probably want to use the -d flag as well. This tells philix that it needs to dump to the specified output file on exit. Here's an example:
+
+
+    [oshacker@machine]# philix -d -n -b boot/inkythecat boot/winkythecat -o test.out
+    
+Note the addition of the -o flag. This is the name to use for your output file. If you don't supply this flag, you'll get the default filename (philix-datetime.log). By the way, the -d flag will also tell philix to dump its output if it catches a terminating signal.
+Finally, -m is used if you have more than one Xeon Phi in your system. The default (in accordance with MPSS) is mic0. However, if you have two cards, you may need to change it. Here's an example showing how to boot Winky on your second card:
+
+    [oshacker@machine]# philix -m 1 -b boot/inkythecat -k boot/winkythecat
+    
+Note that the -m 1 here corresponds to mic1 in your sysfs tree.
+Picking and Using a Bootloader
+Due to the specific requirements of the Xeon Phi, we've provided a bootloader for you, as you saw above. This bootloader (Inky) is based on the Weever bootloader created by the Systems group at ETH Zurich for use with Barrelfish. We suggest you use Inky to boot your kernel. We will likely enhance it in the future.
+
+Interface Requirements:
+=======================
+
+There are three major components that are important to interface with philix:
+
+- Multiboot2: your kernel needs to be Multiboot2 compliant in order to work with the bootloader that we give you. The major implications of this are that you need to include a multiboot header at the beginning of your kernel (see winky/boot.S) and that you should expect a certain environment to be setup (e.g. protected mode) when execution reaches the entry point of your kernel.
+- Custom linkage: This amounts to linking your kernel to be loaded at 16MB. This is, again, so that your kernel will work with the bootloader we provide.
+- Console hooks: since the core of philix is just a console, you need to have some functions in your kernel that will treat it as such. More on this below.
+
+We'll now take a look of these in a bit more detail.
+
+##Multiboot2##
+
+All you really need to do is put a header like this in the very beginning of your kernel (from winky/boot.S)
+
+multiboot_hdr:
+    .long 0xe85250d6
+    .long 0
+    .long hdr_end - multiboot_hdr
+    .long -(0xe85250d6 + 0 + (hdr_end - multiboot_hdr))
+
+    /* BEGIN TAGS */
+
+    /* sections */
+    .word 2, 0
+    .long 24
+    .long multiboot_hdr
+    .long _loadStart
+    .long _loadEnd
+    .long _bssEnd
+
+    /* entry point */
+    .word 3, 0
+    .long 16
+    .long kernel_entry
+    .long 0
+
+    /* tags end */
+    .word 0, 0
+    .long 8
+hdr_end:
+Take a look at winky/boot.S and winky/linker.lds to see where these values come from. A quick look at the Multiboot2 spec will give a more detailed explanation of the meaning of every field in a kernel's multiboot header.
+
+##Custom linkage##
+
+Make sure you have a directive in your linker script to load the kernel at 16MB. See winky/linker.lds
+
+##Console hooks##
+
+When implementing your console driver, you should assume that it's a standard legacy VGA console, with the framebuffer located at 0xb8000. Further, you need to call the following functions when appropriate (see winky/cga.c and winky/xeon_phi.{h,c}:
+
+
+void phi_notify_redraw(void);
+void phi_notify_scrollup(void);
+void phi_send_cons_shutdown(void);
+void phi_notify_line_draw (unsigned row);
+        
+To see how to use these functions, take a look at winky/cga.c. Breifly, here is what they do:
+
+phi_notify_redraw: Tell philix it needs to redraw the screen
+phi_notify_scrollup: Tell philix that you scrolled back a line of the framebuffer
+phi_notify_line_draw: Tell philix that a line was just drawn into the framebuffer
+phi_send_cons_shutdown: Tell philix that it can disconnect from the Xeon Phi
+Again, it's best to just look at the example framebuffer code that's included in the philix distro.
+
+Debugging:
+==========
+
+If you're having issues, you may want to try passing the --enable-debug flag to the configure script when you build philix. This will enable some further debugging output in the philix console.
+
+Getting Help:
+=============
+
+If you're having problems particular to philix, you can contact Kyle, but there are also some other resources that may help:
+
+- Intel's MPSS guide
+- Intel's Quick-start guide
+- Xeon Phi Co-processor dev manual

@@ -1,0 +1,111 @@
+#ifndef __WINKY_H__
+#define __WINKY_H__
+#define P(x) term_print(x)
+
+static void 
+splash (void) 
+{
+	P("                       :L                                             \n");
+	P("                        KD;                                           \n");
+	P("                        EKKDi                                         \n");
+	P("                         ###WKKKKWWWWWWEf,                            \n");
+	P("                        .####WWWKEDDDDEWW#W#,                         \n");
+	P("                       :##WEDGGGGGGGGGGGGGEEW#L    ,KWW#WWWKD         \n");
+	P("                     .##KDGGLjiLGGLGGGGGGGLGGEW#W#WWKKEKEE##W         \n");
+	P("                   j##DLLGL;,:;GGGGLGGGGLLLGDKKDLGLLLLLLDW##E         \n");
+	P("                  W#KGLLLGLjLj;,ifLLLGLGGGDEDGLGGLGGGGDEKEEW:         \n");
+	P("                 #WELGGLLGGGGGGt,:tLfGLDEEDLGLGGGLLGDKKKGLEG          \n");
+	P("               LWELGGGLfLLGGLGGLGi.:tEKEGGGGLGLLGLEWW#KLLEE           \n");
+	P("              EWDLfLfLLfLLLGGLLGL;iDKEDGGGLLLGGDEWKf:iDKKD            \n");
+	P("             fWGLfLLGLjfLLffLLfffGEKGGLGLGGGGGKWWL.   :fW             \n");
+	P("KE          GWDfLfLLGLjjLLLLGLLLEKELLLGGGGGEKWGt:   .  .jK            \n");
+	P(",WWKf      EWDfLLLLLLGffLLLLLGDKEGLLLLLGDEWEj.        .  ;E           \n");
+	P(" W###WE   tWDLLLLLLLLLLLLLLLDKKDGGLLfGEKWW#,.  .          tE          \n");
+	P(" G####W#E #KLLLLLGLLLLfLGLLDKEDLGLLGDKKLi.tE:              GE         \n");
+	P("  W#####W#WKDLfLGGLGLLLLLGEEGGLGGEKKGi.    tD .            .EG        \n");
+	P("  ,#####W#W##WKEGLLGGLLGDEEGLLGEWWL,   .    Di  .        .  ;Ki       \n");
+	P("   W##########WWKDGGLGfDKDGGDKWLi:          ,E.       .      jE       \n");
+	P("   E#########EGDLLGGGLDKDLEWKt. ..           fj          .   :Dj      \n");
+	P("    W#######WWKGLGGGLKEDWWf:                  E;       .WWW,  ,E      \n");
+	P("    W########KLLLLGGKWWWKi.                   :G.     .Ef;;jj .W:     \n");
+	P("    L#######KLGLLfGW###W.                      jL     fG   .t;.DG     \n");
+	P("     W#####DfLLLfDW####,                        E.    #:     : ;D    t\n");
+	P("     K####DLLLLfGW####f                         :t   .W.       .E    D\n");
+	P("     K###ELLffLGK#####,                          K:   K         L,   E\n");
+	P("     ###KLGLLfLKWW###K.                          jj   i.        fj  LG\n");
+	P("    .W#KGLfLLLW##W###f                 :;;.      .D:            jf  K.\n");
+	P("    K#DGLfLffE#######t               .E#WKKt      jj            jG ED \n");
+	P("    K#GLLLLLDW#######t              ;Wf,  .:;     ,K            f#jEi \n");
+	P("    KWLLLLLDW########f .            Ef   .  .      G:           E#KD E\n");
+	P("    EKLLLLDWW########D.            ,D              :E          :EKW;KG\n");
+	P("    KWLLfLK##########W.            jj               #;         jjLWKE \n");
+	P("    WWffLGW##########W;            ji               WG        .W:i#D  \n");
+	P("    E#LLLW############L            ;;            .  WjE.     .D, :W   \n");
+	P("    E#LjD#############K.           :f               E,iL,  .;Dj  :W   \n");
+	P("    G#DfK##############f           ;t               #, ,KKLED,   .W   \n");
+	P("    .#WK################.                           W:  .iGDj    :W   \n");
+	P("     W##################j                           K  tK####D.  ;K   \n");
+	P("     D#W#################;                         jj.L####WW#G  fK   \n");
+	P("     D#W#################D.                       :K.f########W  KE   \n");
+	P("     f####################D:                     .Gj,W########W :#    \n");
+	P("      #####################D                     Df L#WW######E t#    \n");
+	P("      ###########KDffGDK####f                  :LG. L####W###W: GW    \n");
+	P("      #########Wf:      :ifD#Ki.             :jWL. .,W######K, ,Wf    \n");
+	P("     L#########t            :f#Ef,.        .f#K,     t#W#W#D   KK     \n");
+	P("DDEEKW#######WE.              .;jLEDGfjjffE#Ei.       ;jLf;   .Wj     \n");
+	P("    D#W#######G   .                :ifGDEGt,                 .jW      \n");
+	P(";GE###########L          ..                              .   ,W:      \n");
+	P("  W###########G        ,LKE;                            .L. .GK       \n");
+	P("  ############E       ;DiD#L:                           t: .fW        \n");
+	P("   EWW########W;     ,;  ,W##Et                        j,  fWi        \n");
+	P("      tW#######G     ,    E####KLi:                 .if,  iWt         \n");
+	P("         KW####W;         i########Gt:.       . . :tEt.  ,KG          \n");
+	P("           GW###D .       .W##########KDGLfjfffLGGLt.   iWj           \n");
+	P("             E###f         f##########KDKGtiii;:L,    .L#K            \n");
+	P("            K#W#W#f .     .;#KDGDKW#####;        K,  iWW##W           \n");
+	P("           DEEEK##Wf.      .EELLLLDW####f.       ,G,G#####WG          \n");
+	P("                 DK#D:.     ;EELLLLLK##LtL.       ;#########          \n");
+	P("                    EK;.     ,GKGffLL#t. jf       j##W######,         \n");
+	P("                      KGi.    .iLGDGfi    Lj ,tjjtE####KK###Wi        \n");
+	P("                     KW##Ej:      .     ..i#LfffjtW#WWjL####W#W       \n");
+	P("                EW############WGfjjfGEKWW####DLGLLK#WiK##W#####G      \n");
+	P("              DK#############################WELLLDW;D######WWWW      \n");
+	P("           GWDGDW#############################KDfLLKj#W#########D     \n");
+	P("        LKKK#EfK###############################WEGLLWW#W##W#####E     \n");
+	P("      iW#WWELG###############################W#DWDGDK####KfW##W##f    \n");
+	P("     K#W#WWEEKW################################L#WEfj###K;K######W    \n");
+	P("   :K###WW###EK#############################K##f##K: iK#LG########    \n");
+	P("   WW#######KEW##WW######WW################ED##j####: .,;W########t   \n");
+	P("  LW#######WKW###EGK##WGtjK###############KLE##LW###K: ..K########.   \n");
+	P("  K#######EEKW##WKKWEDGfK###############WELLW##EG####D:  f####WD##    \n");
+	P("  W#W####W##WWWW#KDGLGGLLGE###########WEGLGE####jW####K: .iGGf, f#    \n");
+	P("  KWWW##W#######WLGLEKKKGfLfEWWW##WWEDLLGLGWK####K#WKW#G ....    G    \n");
+	P("  ##W######WW###DLLEfi;jEGLLLLLGGGGLLLLLLLEK K###GE#D###LtLLGLjtifK,  \n");
+	P("DjK#########KK##LLDL:,.:fEGGLLLLLLLLLLLGLGK;  W###LD;###WEGLGGLf:jGE  \n");
+	P("GK#########WE#W#DGKt:::::ELLLLLLLLLLLGGLGDE    W####Gf###WELGLLLj,LLK \n");
+	P("j;tfDW#####ED#WWEKWEL,:::DGLLGLLfGfLGLLLLWGK    W###WGD###WDLLLGGttLLE\n");
+	P("   GKW#####WW#WW#####Ki,;EGLLLGGLLGDLGLLKLEWK    ##########WGGGLGL,tfD\n");
+	P(" .KW#######W##W######W#LEDLGGLGKELKDELLEfjK,E     WW########WDLGLGL;;D\n");
+	P(" KK##########K###W####W#ELGGLGEj,it KEGftKj,L:    ,W#########WEGGGDDft\n");
+	P("jW##W#####WKED##########DGGLGKf::ji .WLtEL::tE     :##########WLLEfi .\n");
+	P("E########WW###W#########KDEDDKi:,ji   KKj:::,WLfD:  :W####WW#KWf. .   \n");
+	P("########################KDGEKW:.L      tKj:::E;:,tG   LK####K  KD;    \n");
+	P("########################G:i  Ei:G        K;:,DKEEEGE    WWWK    GW,   \n");
+	P("#####################W##t,L   EiG         EiLW.                  .Kj. \n");
+	P("K###KK##############W,iGED     E           KD.                     DKL\n");
+	P("G##WfL##############f ..;GWKD   ,           ED                       G\n");
+	P(".K#WLf#####WW######K:.  .iLDK#ED.            K                        \n");
+	P(" :K#Ei####E########G,...L;,fLDDWWWKE:        :                        \n");
+	P("   iEGL###iE#######Wj;tLLfG;,jLfLEGfD##K                              \n");
+	P("      ;D##Ej#########EELLLLLt,;Lt:  jGtjEK                            \n");
+	P("        DWWLDW#######WKWLLfLLLL. . if.  .LK                           \n");
+	P("           GfLK######D  EWKGLG.  . G .    LK                          \n");
+	P("              LKW##WK    ,DKKf::...t   .  ;K                          \n");
+	P("                GWKG        DWE,,::t    . ,E                          \n");
+	P("                              fKL;,G...   ,W                          \n");
+	P("                                GKGDf,..  jW                          \n");
+	P("                                  EWWEi, ,Kj                          \n");
+	P("                                    GWKEK#f   \n");
+}
+
+#endif
